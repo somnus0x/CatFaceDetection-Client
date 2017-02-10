@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cat Face Detection</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static "web/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Font Awesome CSS -->
+    <link href="{% static "web/css/font-awesome.min.css" %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static "web/css/animate.css" %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static "web/css/style.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "web/css/footer-distributed.css" %}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link href="{% static "web/css/main.css" %}" rel="stylesheet">
+
+
+
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+
+
+    <!-- Template js -->
+    <script src="{% static "web/js/jquery-2.1.1.min.js" %}"></script>
+    <script src="{% static "web/bootstrap/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "web/js/jquery.appear.js" %}"></script>
+    <script src="{% static "web/js/contact_me.js" %}"></script>
+    <script src="{% static "web/js/jqBootstrapValidation.js" %}"></script>
+    <script src="{% static "web/js/modernizr.custom.js" %}"></script>
+    <script src="{% static "web/js/script.js" %}"></script>
+    <style>
+
+    html
+    {
+    }
+    body
+    {
+        font-family: Roboto, sans-serif;
+
+    }
+
+    .container
+    {
+        width: 100%;
+        max-width: 680px; /* 800 */
+        text-align: center;
+        margin: 0 auto;
+    }
+
+
+
+    {
+        color: #39bfd3;
+    }
+
+    .container nav
+    {
+        margin-bottom: 40px;
+    }
+    .container nav a
+    {
+        border-bottom: 2px solid #c8dadf;
+        display: inline-block;
+        padding: 4px 8px;
+        margin: 0 5px;
+    }
+    .container nav a.is-selected
+    {
+        font-weight: 700;
+        color: #39bfd3;
+        border-bottom-color: currentColor;
+    }
+    .container nav a:not( .is-selected ):hover,
+    .container nav a:not( .is-selected ):focus
+    {
+        border-bottom-color: #0f3c4b;
+    }
+
+    .container footer
+    {
+        color: #92b0b3;
+        margin-top: 40px;
+    }
+    .container footer p + p
+    {
+        margin-top: 1em;
+    }
+    .container footer a:hover,
+    .container footer a:focus
+    {
+        color: #39bfd3;
+    }
+
+    .box
+    {
+        font-size: 1.25rem; /* 20 */
+        background-color: #c8dadf;
+        position: relative;
+        padding: 100px 20px;
+    }
+    .box.has-advanced-upload
+    {
+        outline: 2px dashed #92b0b3;
+        outline-offset: -10px;
+
+        -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+        transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    }
+    .box.is-dragover
+    {
+        outline-offset: -20px;
+        outline-color: #c8dadf;
+        background-color: #fff;
+    }
+    .box__dragndrop,
+    .box__icon
+    {
+        display: none;
+    }
+    .box.has-advanced-upload .box__dragndrop
+    {
+        display: inline;
+    }
+    .box.has-advanced-upload .box__icon
+    {
+        width: 100%;
+        height: 80px;
+        fill: #92b0b3;
+        display: block;
+        margin-bottom: 40px;
+    }
+
+    .box.is-uploading .box__input,
+    .box.is-success .box__input,
+    .box.is-error .box__input
+    {
+        visibility: hidden;
+    }
+
+    .box__uploading,
+    .box__success,
+    .box__error
+    {
+        display: none;
+    }
+    .box.is-uploading .box__uploading,
+    .box.is-success .box__success,
+    .box.is-error .box__error
+    {
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        left: 0;
+
+        -webkit-transform: translateY( -50% );
+        transform: translateY( -50% );
+    }
+    .box__uploading
+    {
+        font-style: italic;
+    }
+    .box__success
+    {
+        -webkit-animation: appear-from-inside .25s ease-in-out;
+        animation: appear-from-inside .25s ease-in-out;
+    }
+    @-webkit-keyframes appear-from-inside
+    {
+        from	{ -webkit-transform: translateY( -50% ) scale( 0 ); }
+        75%		{ -webkit-transform: translateY( -50% ) scale( 1.1 ); }
+        to		{ -webkit-transform: translateY( -50% ) scale( 1 ); }
+    }
+    @keyframes appear-from-inside
+    {
+        from	{ transform: translateY( -50% ) scale( 0 ); }
+        75%		{ transform: translateY( -50% ) scale( 1.1 ); }
+        to		{ transform: translateY( -50% ) scale( 1 ); }
+    }
+
+    .box__restart
+    {
+        font-weight: 700;
+    }
+    .box__restart:focus,
+    .box__restart:hover
+    {
+        color: #39bfd3;
+    }
+
+    .js .box__file
+    {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+    .js .box__file + label
+    {
+        max-width: 80%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+    }
+    .js .box__file + label:hover strong,
+    .box__file:focus + label strong,
+    .box__file.has-focus + label strong
+    {
+        color: #39bfd3;
+    }
+    .js .box__file:focus + label,
+    .js .box__file.has-focus + label
+    {
+        outline: 1px dotted #000;
+        outline: -webkit-focus-ring-color auto 5px;
+    }
+    .js .box__file + label *
+    {
+        /* pointer-events: none; */ /* in case of FastClick lib use */
+    }
+
+    .no-js .box__file + label
+    {
+        display: none;
+    }
+
+    .no-js .box__button
+    {
+        display: block;
+    }
+    .box__button
+    {
+        font-weight: 700;
+        color: #e5edf1;
+        background-color: #39bfd3;
+        display: none;
+        padding: 8px 16px;
+        margin: 40px auto 0;
+    }
+    .box__button:hover,
+    .box__button:focus
+    {
+        background-color: #0f3c4b;
+    }
+
+    </style>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- Start Logo Section -->
+    <section id="logo-section" class="text-center" style="padding-top: 100px">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="#">
+                        <div class="logo text-center">
+                            <h1>Cat Face Detection</h1>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Logo Section -->
+
+    <!-- Start Main Body Section -->
+    <div class="mainbody-section text-center">
+        <div class="container">
+
+            <!--    <div class="menu-item light-orange">
+            <a href="#team-modal" data-toggle="modal">
+            <i class="fa fa-users"></i>
+            <p>Team</p>
+        </a>
+    </div> -->
+    <div class="cover-container">
+
+
+        <div class="inner cover">
+
+            <p class="lead" style="color:#F7F7F7">Tagging your cat has never been this easy</p>
+            <p class="lead">
+                <!--  <a href="#" class="btn btn-lg btn-default">Learn more</a> -->
+                <div class="buttons">
+
+                    <a class="btn greenbtn" href="#team-modal" data-toggle="modal">Start Cat Detection</a>
+
+                </div>
+            </p>
+            <div style="padding-top: 20px">
+                <img src="images/app-store-badge.png" style="height: 50px;padding-right: 10px">
+                <img src="images/google-play-badge.png" style="height: 50px">
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+</div>
+<!-- End Main Body Section -->
+
+<!-- Start Copyright Section -->
+<!--      <footer class="copyright text-center">
+<div class="container">
+<div class="row">
+<div class="col-md-12">
+<div>Design & Developed by <a href="http://www.graygrids.com" target="_blank">GrayGrids</a></div>
+</div>
+</div>
+</div>
+</footer>  -->
+<!-- End Copyright Section -->
+
+
+
+
+<!-- Start Team Member Section -->
+<div class="section-modal modal fade" id="team-modal" tabindex="-1" role="dialog" aria-hidden="true" style="padding-left: 0 px !important">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="section-title text-center">
+                    <h3>Upload your image</h3>
+                    <p>upload your image and find cat in your image.</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="container" id="input_image">
+
+            <!-- <form method="post" class="box has-advanced-upload"> -->
+
+<!--
+                <div class="box__input" onclick="send()">
+                    <svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
+                    <input type="file" name="files[]" id="file" class="box__file" data-multiple-caption="{count} files selected" multiple="">
+                    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+                    <button type="submit" class="box__button">Upload</button>
+                </div> -->
+
+
+                <!-- <div class="box__uploading">Uploading…</div>
+                <div class="box__success">Done! <a href="https://css-tricks.com/examples/DragAndDropFileUploading//?" class="box__restart" role="button">Upload more?</a></div>
+                <div class="box__error">Error! <span></span>. <a href="https://css-tricks.com/examples/DragAndDropFileUploading//?" class="box__restart" role="button">Try again!</a></div>
+                <input type="hidden" name="ajax" value="1"></form>
+            </div>
+            <div class="container" onclick="bar()" id="result_image"  style="margin-right: 0 auto;margin-left: 0 auto; display: none;">
+                <div class="row">
+                    <img id="show_image" src="#" style="display: block;margin: 0 auto; width: 60% ; height: 60%" >
+                    <h3>2 cats detected</h3>
+                </div>
+            </div> -->
+            <canvas id="myCanvas" width="300" height="150" style="border:1px solid #d3d3d3;"></canvas>
+            <input type="file" id="choose_image" onchange="loadFile(event)">Browse</input>
+            <button onclick="submit()">Ok</button>
+
+        </div>
+
+
+
+    </div>
+</div>
+<!-- End Team Member Section -->
+
+<footer class="footer-distributed" style="position: absolute;bottom: 0;opacity: 0.7;width: 100%">
+
+    <div class="footer-right">
+
+        <a href="#"><i class="fa fa-facebook"></i></a>
+        <a href="#"><i class="fa fa-twitter"></i></a>
+        <a href="#"><i class="fa fa-linkedin"></i></a>
+        <a href="#"><i class="fa fa-github"></i></a>
+
+    </div>
+
+    <div class="footer-left">
+
+        <p class="footer-links">
+            <a href="#">Home</a>
+            ·
+            <a href="#">Blog</a>
+            ·
+            <a href="#">Pricing</a>
+            ·
+            <a href="#">About</a>
+            ·
+            <a href="#">Faq</a>
+            ·
+            <a href="#">Contact</a>
+        </p>
+
+        <p>Company Name © 2015</p>
+    </div>
+
+</footer>
+
+
+<!-- End clients Section -->
+
+</body>
+
+</html>
